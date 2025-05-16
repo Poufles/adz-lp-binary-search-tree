@@ -70,7 +70,7 @@ export default function NodeTree(arr) {
             levelOrderArr.push(currentNode.root);
             if (currentNode.left) queue.push(currentNode.left)
             if (currentNode.right) queue.push(currentNode.right)
-            
+
             queue = queue.slice(1);
         };
 
@@ -102,8 +102,18 @@ export default function NodeTree(arr) {
     };
 
     const height = (value) => {
+        if (!find(value)) return null;
 
+        return FindHeight(find(value)) - 1;
     };
+
+    const depth = (value) => {
+        if (!find(value)) return null;
+
+        return FindDepth(root, value) - 1;
+    };
+
+    const isBalanced = () => CheckBalance(root);
 
     return {
         prettyPrint,
@@ -114,7 +124,9 @@ export default function NodeTree(arr) {
         levelOrder,
         inOrder,
         preOrder,
-        postOrder
+        postOrder,
+        height,
+        depth,
     };
 };
 
@@ -164,7 +176,7 @@ function FindLowestNode(node) {
     if (left && right) return left > right ? right : left;
     if (left) return left;
     if (right) return right;
-    
+
     return node;
 };
 
@@ -192,6 +204,40 @@ function PostorderTraversal(arr, node) {
     if (node.left) PostorderTraversal(arr, node.left);
     if (node.right) PostorderTraversal(arr, node.right);
     arr.push(node.root);
+};
+
+function FindHeight(node) {
+    let leftHeight = 1, rightHeight = 1;
+
+    if (node.left) leftHeight += FindHeight(node.left);
+    if (node.right) rightHeight += FindHeight(node.right);
+
+    return leftHeight > rightHeight ? leftHeight : rightHeight;
+};
+
+function FindDepth(node, value) {
+    if (node.root === value) return 1;
+
+    let height = 1;
+
+    if (node.left) height += FindDepth(node.left, value);
+    if (node.right) height += FindDepth(node.right, value);
+
+    if (height === 1) height = 0;
+
+    return height;
+};
+
+function CheckBalance(node) {
+    let leftBalance = 1, 
+        rightBalance = 1;
+
+    if (!node) return 1;
+
+    if (node.left) leftBalance += CheckBalance(node.left);
+    if (node.right) leftBalance += CheckBalance(node.right);
+
+    
 };
 
 function RemoveDuplicates(arr) {
