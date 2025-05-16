@@ -1,12 +1,9 @@
 import MergeSort from "./merge-sort.mjs";
 
 /**
- * NOTE IN FUNCTION INSERT
- * # THE FUNCTION DOES NOT INSERT 
- * # THE NEW VALUE IN THE ARRAY.  
+ * Creates a Node object.
+ * @returns 
  */
-///
-
 function Node() {
     let root, left, right;
 
@@ -25,27 +22,44 @@ export default function NodeTree(arr) {
     let root;
     let sortedArr = RemoveDuplicates(MergeSort(arr));
 
+    /**
+     * Creates a visualisation of the tree (by TheOdinProject).
+     */
     const prettyPrint = () => {
         print(root, '', true);
     };
 
+    /**
+     * Creates a tree.
+     * @returns The root of the tree
+     */
     const buildTree = () => {
         root = tree(sortedArr, 0, sortedArr.length - 1);
 
         return root;
     };
 
+    /**
+     * Inserts a new value in the tree.
+     * Note: This does not automatically balances
+     * the tree.
+     * @param {Number} value Value to be inserted
+     */
     const insert = (value) => {
-        if (find(value)) return;
+        if (find(value)) return; // Check if value already exists
 
         InsertNode(root, value);
         sortedArr.push(value);
     };
 
+    /**
+     * Deletes an item from the tree.
+     * @param {Number} value 
+     */
     const deleteItem = (value) => {
-        const nodeToBeDeleted = find(value);
+        const nodeToBeDeleted = find(value); // Check if the value exists in the tree
 
-        if (!nodeToBeDeleted) return null;
+        if (!nodeToBeDeleted) return;
 
         const lowestNode = FindLowestNode(nodeToBeDeleted);
         const lowestNodeParent = FindParentNode(nodeToBeDeleted, lowestNode);
@@ -58,8 +72,17 @@ export default function NodeTree(arr) {
         sortedArr.splice(sortedArr.indexOf(value), 1);
     };
 
+    /**
+     * Finds a node in the tree. 
+     * @param {Number} value Value to be found.
+     * @returns A node
+     */
     const find = (value) => FindNode(root, value);
 
+    /**
+     * Traverses the nodes of each level of the tree.
+     * @returns Array of the elements.
+     */
     const levelOrder = () => {
         const levelOrderArr = [];
         let queue = [root];
@@ -77,6 +100,10 @@ export default function NodeTree(arr) {
         return levelOrderArr;
     };
 
+    /**
+     * Traverses the tree by left, root, right.
+     * @returns An array of elements
+     */
     const inOrder = () => {
         const arr = [];
 
@@ -85,14 +112,22 @@ export default function NodeTree(arr) {
         return arr;
     };
 
+    /**
+     * Traverses the tree by root, left, right.
+     * @returns An array of elements
+     */
     const preOrder = () => {
         const arr = [];
-
+        
         PreorderTraversal(arr, root);
-
+        
         return arr;
     };
-
+    
+    /**
+     * Traverses the tree by left, right, root.
+     * @returns An array of elements
+     */
     const postOrder = () => {
         const arr = [];
 
@@ -101,18 +136,32 @@ export default function NodeTree(arr) {
         return arr;
     };
 
+    /**
+     * Retrieves the height of a given value
+     * @param {Number} value  
+     * @returns The height of the value in the tree.
+     */
     const height = (value) => {
         if (!find(value)) return null;
 
         return FindHeight(find(value)) - 1;
     };
 
+    /**
+     * Retrieves the depth of a given value.
+     * @param {Number} value 
+     * @returns The depth of the value in the tree.
+     */
     const depth = (value) => {
         if (!find(value)) return null;
 
         return FindDepth(root, value) - 1;
     };
 
+    /**
+     * Checks if the tree is balanced. 
+     * @returns A boolean value.
+     */
     const isBalanced = () => {
 
         let balanced = true;
@@ -121,24 +170,26 @@ export default function NodeTree(arr) {
         for (let index = 0; index < queue.length; index++) {
             const currentNode = queue[index];
 
-            if (currentNode.right) queue.push(currentNode.right)
-            if (currentNode.left) queue.push(currentNode.left)
-        };
-
-        while (queue.length !== 0 && balanced) {
-            const node = queue.pop();
-
             let leftNode = 0, rightNode = 0;
-
-            if (node.left) leftNode = height(node.left.root) + 1;
-            if (node.right) rightNode = height(node.right.root) + 1;
-
-            if (Math.abs(leftNode - rightNode) > 1) balanced = false;
+            
+            if (currentNode.left) leftNode = height(currentNode.left.root) + 1;
+            if (currentNode.right) rightNode = height(currentNode.right.root) + 1;
+            
+            if (Math.abs(leftNode - rightNode) > 1) {
+                balanced = false;
+                break;
+            };
+            
+            if (currentNode.right) queue.push(currentNode.right);
+            if (currentNode.left) queue.push(currentNode.left);
         };
 
         return balanced;
     };
 
+    /**
+     * Rebalances the tree.
+     */
     const rebalance = () => {
         sortedArr = inOrder();
         buildTree();

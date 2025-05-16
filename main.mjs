@@ -1,39 +1,40 @@
 import NodeTree from "./binary-search.mjs";
 
-// const tree = NodeTree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 324]);
-const tree = NodeTree([1, 3, 5]);
-const x = tree.buildTree();
-tree.insert(-1);
-tree.insert(-2);
-tree.insert(6);
-tree.insert(7);
-console.log(tree.isBalanced());
-tree.prettyPrint();
-tree.rebalance();
-console.log(tree.isBalanced());
-tree.prettyPrint();
-// console.log(x)
-// console.log(`Main Root: ${x.root}`);
-// console.log(`Main Left: ${x.left}`);
-// console.log(`Main Right: ${x.right}`);
-// console.log(`Main Left Root: ${x.left.root}`);
-// console.log(`Main Left Left: ${x.left.left}`);
-// console.log(`Main Left Right: ${x.left.right}`);
-// console.log(`Main Right Root: ${x.right.root}`);
-// console.log(`Main Right Left: ${x.right.left}`);
-// console.log(`Main Right Right: ${x.right.right}`);
-// tree.insert(3);
-// console.log('\n')
-// console.log(tree.find(3));
-// tree.deleteItem(5);
-// console.log(tree.levelOrder());
-// console.log(tree.inOrder());
-// console.log(tree.preOrder());
-// console.log(tree.postOrder());
-// tree.insert(10);
-// console.log(tree.height(2));
-// console.log(tree.depth(7));
-// console.log({3} === {3})
-// tree.insert(10);
-// tree.insert(6);
-// tree.prettyPrint();
+// TESTS //
+const arr1 = [300, 381, 912, 802, 43, 155, 394, 407, 289, 880]
+
+const arr2 = [511, 313, 472, 647, 985, 586, 118, 370, 530, 926, 673, 35, 541, 688, 104, 906, 486, 570, 500, 993,
+    802, 920, 492, 586, 232, 787, 199, 8, 84, 943, 554, 3, 242, 351, 312, 863, 426, 856, 573,
+    787, 801, 617, 581, 674, 95, 817, 34, 267, 504, 34, 982, 943, 831, 947, 529, 142, 223, 999, 922]
+
+
+
+const Tree = NodeTree(arr1);
+Tree.buildTree();
+Tree.prettyPrint();
+console.log(Tree.isBalanced());
+console.log(Tree.preOrder());
+console.log(Tree.postOrder());
+console.log(Tree.inOrder());
+
+const rand = Math.floor(Math.random() * arr2.length / 2);
+for (let index = 0; index < rand; index++) {
+    const randNum = Math.floor(Math.random() * arr2.length)
+    const num = arr2[randNum];
+
+    Tree.insert(num);
+};
+
+console.log('\n\n');
+
+Tree.prettyPrint();
+console.log(Tree.isBalanced());
+
+console.log('\n\n');
+
+Tree.rebalance();
+Tree.prettyPrint();
+console.log(Tree.isBalanced());
+console.log(Tree.preOrder());
+console.log(Tree.postOrder());
+console.log(Tree.inOrder());
