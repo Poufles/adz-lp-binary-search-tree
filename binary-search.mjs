@@ -23,7 +23,7 @@ function Node() {
  */
 export default function NodeTree(arr) {
     let root;
-    const sortedArr = RemoveDuplicates(MergeSort(arr));
+    let sortedArr = RemoveDuplicates(MergeSort(arr));
 
     const prettyPrint = () => {
         print(root, '', true);
@@ -37,7 +37,9 @@ export default function NodeTree(arr) {
 
     const insert = (value) => {
         if (find(value)) return;
+
         InsertNode(root, value);
+        sortedArr.push(value);
     };
 
     const deleteItem = (value) => {
@@ -53,12 +55,10 @@ export default function NodeTree(arr) {
         if (lowestNodeParent.left && lowestNodeParent.left.root === lowestNode.root) lowestNodeParent.left = null;
         if (lowestNodeParent.right && lowestNodeParent.right.root === lowestNode.root) lowestNodeParent.right = null;
 
-        prettyPrint();
+        sortedArr.splice(sortedArr.indexOf(value), 1);
     };
 
-    const find = (value) => {
-        return FindNode(root, value);
-    };
+    const find = (value) => FindNode(root, value);
 
     const levelOrder = () => {
         const levelOrderArr = [];
@@ -113,7 +113,36 @@ export default function NodeTree(arr) {
         return FindDepth(root, value) - 1;
     };
 
-    const isBalanced = () => CheckBalance(root);
+    const isBalanced = () => {
+
+        let balanced = true;
+        let queue = [root];
+
+        for (let index = 0; index < queue.length; index++) {
+            const currentNode = queue[index];
+
+            if (currentNode.right) queue.push(currentNode.right)
+            if (currentNode.left) queue.push(currentNode.left)
+        };
+
+        while (queue.length !== 0 && balanced) {
+            const node = queue.pop();
+
+            let leftNode = 0, rightNode = 0;
+
+            if (node.left) leftNode = height(node.left.root) + 1;
+            if (node.right) rightNode = height(node.right.root) + 1;
+
+            if (Math.abs(leftNode - rightNode) > 1) balanced = false;
+        };
+
+        return balanced;
+    };
+
+    const rebalance = () => {
+        sortedArr = inOrder();
+        buildTree();
+    };
 
     return {
         prettyPrint,
@@ -127,6 +156,8 @@ export default function NodeTree(arr) {
         postOrder,
         height,
         depth,
+        isBalanced,
+        rebalance
     };
 };
 
@@ -226,18 +257,6 @@ function FindDepth(node, value) {
     if (height === 1) height = 0;
 
     return height;
-};
-
-function CheckBalance(node) {
-    let leftBalance = 1, 
-        rightBalance = 1;
-
-    if (!node) return 1;
-
-    if (node.left) leftBalance += CheckBalance(node.left);
-    if (node.right) leftBalance += CheckBalance(node.right);
-
-    
 };
 
 function RemoveDuplicates(arr) {
