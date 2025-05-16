@@ -36,6 +36,7 @@ export default function NodeTree(arr) {
     };
 
     const insert = (value) => {
+        if (find(value)) return;
         InsertNode(root, value);
     };
 
@@ -59,13 +60,61 @@ export default function NodeTree(arr) {
         return FindNode(root, value);
     };
 
+    const levelOrder = () => {
+        const levelOrderArr = [];
+        let queue = [root];
+
+        while (queue.length !== 0) {
+            const currentNode = queue[0];
+
+            levelOrderArr.push(currentNode.root);
+            if (currentNode.left) queue.push(currentNode.left)
+            if (currentNode.right) queue.push(currentNode.right)
+            
+            queue = queue.slice(1);
+        };
+
+        return levelOrderArr;
+    };
+
+    const inOrder = () => {
+        const arr = [];
+
+        InorderTraversal(arr, root);
+
+        return arr;
+    };
+
+    const preOrder = () => {
+        const arr = [];
+
+        PreorderTraversal(arr, root);
+
+        return arr;
+    };
+
+    const postOrder = () => {
+        const arr = [];
+
+        PostorderTraversal(arr, root);
+
+        return arr;
+    };
+
+    const height = (value) => {
+
+    };
+
     return {
         prettyPrint,
         buildTree,
         insert,
         deleteItem,
         find,
-        
+        levelOrder,
+        inOrder,
+        preOrder,
+        postOrder
     };
 };
 
@@ -125,6 +174,24 @@ function FindParentNode(parent, node) {
 
     if (parent.left) return FindParentNode(parent.left, node);
     if (parent.right) return FindParentNode(parent.right, node);
+};
+
+function InorderTraversal(arr, node) {
+    if (node.left) InorderTraversal(arr, node.left);
+    arr.push(node.root);
+    if (node.right) InorderTraversal(arr, node.right);
+};
+
+function PreorderTraversal(arr, node) {
+    arr.push(node.root);
+    if (node.left) PreorderTraversal(arr, node.left);
+    if (node.right) PreorderTraversal(arr, node.right);
+};
+
+function PostorderTraversal(arr, node) {
+    if (node.left) PostorderTraversal(arr, node.left);
+    if (node.right) PostorderTraversal(arr, node.right);
+    arr.push(node.root);
 };
 
 function RemoveDuplicates(arr) {
